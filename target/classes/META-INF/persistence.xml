@@ -4,12 +4,15 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
     <persistence-unit name="classic-model">
+<!--    <persistence-unit name="classic-model" transaction-type="JTA">-->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+<!--        <jta-data-source>jdbc/classicmodels</jta-data-source>-->
         <class>sit.int202.classicmodelagain.entities.Office</class>
         <class>sit.int202.classicmodelagain.entities.Employee</class>
         <class>sit.int202.classicmodelagain.entities.Product</class>
         <class>sit.int202.classicmodelagain.entities.Productline</class>
-        <properties>
+
+       <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/classicmodels?useSSl=false"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>

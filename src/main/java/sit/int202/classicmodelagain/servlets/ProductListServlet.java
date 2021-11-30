@@ -27,6 +27,11 @@ public class ProductListServlet extends HttpServlet {
         int itemCount = productRepository.countAll();
         int totalPage = itemCount/pageSize + (itemCount%pageSize==0 ? 0 : 1);
         request.setAttribute("totalPage", totalPage);
+
+        Cookie ck = new Cookie("lastpage","product-list");
+        ck.setMaxAge(7*24*60*60);
+        response.addCookie(ck);
+
         getServletContext().getRequestDispatcher("/ProductList.jsp").forward(request, response);
 
     }

@@ -1,4 +1,3 @@
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="row pt-4 align-items-center">
@@ -7,7 +6,11 @@
             <div class="img-fluid img-thumbnail" title="${p.productDescription}">
                 <img src="model-images/${p.productLine.id}/${p.id}.jpg" height="120" width="180"/>
             </div>
-            <div>${p.productName} <span class="text-right">${p.msrp}</span></div>
+            <div>
+                    ${p.productName} <span class="text-right">${p.msrp}</span>
+                <span style="color: darkred;margin-left: 2px;cursor: pointer">
+                <i class="bi bi-bag-plus" onclick="addToCart('${p.id}')"></i></span>
+            </div>
         </div>
     </c:forEach>
 </div>
@@ -44,7 +47,6 @@
     </div>
 </div>
 <br>
-
 
 
 <%--จนถึงก่อนใส่รูปภาพ--%>

@@ -31,36 +31,65 @@
     </style>
     <script>
         function loadOffice(officeCode) {
+            setLoading('on')
             const xhttp = new XMLHttpRequest();
-            xhttp.onload = function() {
+            xhttp.onload = function () {
+                setLoading('off');
                 document.getElementById("body-content").innerHTML = xhttp.responseText;
             }
-            xhttp.open("GET", "office-list?officeCode="+officeCode);
+            xhttp.open("GET", "office-list?officeCode=" + officeCode);
             xhttp.send();
         }
-        function loadProduct(page, pageSize=document.getElementById("itemsPage").value) {
-            //alert('page: '+ page + ", size: "+ pageSize)
-            const xhttp = new XMLHttpRequest();
-            xhttp.onload = function() {
-                document.getElementById("body-content").innerHTML = xhttp.responseText;
-            }
-            xhttp.open("GET", "product-list?page="+page+"&pageSize="+pageSize);
-            xhttp.send();
-        }
-        function googleSearch() {
-            //alert('page: '+ page + ", size: "+ pageSize)
-            const xhttp = new XMLHttpRequest();
-            xhttp.withCredentials = true;
 
-            searchText = document.getElementById("searchBox").value;
-            xhttp.onload = function() {
+        function loadProduct(page, pageSize = document.getElementById("itemsPage").value) {
+            //alert('page: '+ page + ", size: "+ pageSize)
+            setLoading('on')
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                setLoading('off');
                 document.getElementById("body-content").innerHTML = xhttp.responseText;
             }
-            xhttp.onerror = function() {
-                document.getElementById("body-content").innerHTML = "<h2 class='text-danger'>"+
-                    xhttp.statusText+ "</h2>";
+            xhttp.open("GET", "product-list?page=" + page + "&pageSize=" + pageSize);
+            xhttp.send();
+        }
+
+        function setLoading(on_off) {
+            let loading = document.getElementById("loading");
+            if (on_off == 'on') {
+                loading.classList.remove("d-none");
+                loading.classList.add("d-inline");
+            } else {
+                loading.classList.remove("d-inline");
+                loading.classList.add("d-none");
             }
-            xhttp.open("GET", "https://www.google.com/search?q="+searchText+ '&rlz=1C1CHZL_enTH813TH813&sxsrf=AOaemvKVIz2_rs6dXOAsLprJQGOcmU8_5A:1635095966168&ei=npV1YZDrCarbz7sP0Ja4iAE&ved=0ahUKEwiQsvKRx-PzAhWq7XMBHVALDhEQ4dUDCA4&oq=java&gs_lcp=Cgdnd3Mtd2l6EAwyBwgjELADECcyBwgjELADECcyBwgjELADECcyBwgAEEcQsAMyBwgAEEcQsAMyBwgAEEcQsAMyBwgAEEcQsAMyBwgAEEcQsAMyBwgAEEcQsAMyBwgAEEcQsANKBAhBGABQAFgAYI-cN2gBcAJ4AIABAIgBAJIBAJgBAMgBCsABAQ&sclient=gws-wiz');
+        }
+        function addToCart(productCode) {
+            setLoading('on')
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                setLoading('off');
+                cartInfo = document.getElementById("noOfItemInCart");
+                noOfItem = xhttp.responseText;
+//                alert("Response = "+ noOfItem);
+                if (noOfItem > 0) {
+                    cartInfo.style.display = 'inline'
+                } else {
+                    cartInfo.style.display = 'none'
+                }
+                cartInfo.innerHTML = noOfItem;
+            }
+            xhttp.open("GET", "add-to-cart?productCode=" + productCode);
+            xhttp.send();
+        }
+        function viewCart(){
+            setLoading('on');
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function (){
+                setLoading('off');
+                document.getElementById("view-cart").innerHTML = xhttp.responseText;
+                $('#viewCartModal').modal('show');
+            }
+            xhttp.open("GET","ViewCart.jsp");
             xhttp.send();
         }
     </script>
@@ -93,6 +122,11 @@
                     <a class="nav-link text-light" href="#"><i class="bi bi-box-arrow-in-right"></i> Login</a>
                 </li>
             </ul>
+            <div style="margin-right: 20px">
+<%--                <img src="assets/images/cart.png" width="42" onclick="viewCart()"/>--%>
+                <span class="text-warning"><i class="bi bi-cart" style="font-size:2em" onclick="viewCart()"></i></span>
+                <button id="noOfItemInCart" class="cart-info" onclick="viewCart()"></button>
+            </div>
             <form class="d-flex">
                 <input id="searchBox" class="form-control me-2" type="text" placeholder="Search">
                 <button class="btn btn-primary" type="button" onclick="googleSearch()">Search</button>
@@ -125,6 +159,34 @@
         community for old and restored muscle cars and standard models from Europe and they are popular collectibles for
         every automobile fan.
     </p>
+</div>
+<div class="d-flex justify-content-center modal d-none" id="loading">
+    <div class="spinner-border text-primary"
+         style="margin-top: 10%; width: 6rem; height: 6rem;"></div>
+</div>
+<%--<c:if test="${cookie.lastpage != null}">--%>
+<%--    <script>--%>
+<%--        window.onload = (ev) => {--%>
+<%--            ${cookie.lastpage.value == 'office-list' ? 'loadOffice()' : 'loadProduct(1,15)'}--%>
+<%--        }--%>
+<%--    </script>--%>
+<%--</c:if>--%>
+
+<div class="modal" tabindex="-1" id="viewCartModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Your Cart</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        onclick="$('#viewCartModal').modal('hide')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="view-cart">
+                <p>Modal body text goes here.</p>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

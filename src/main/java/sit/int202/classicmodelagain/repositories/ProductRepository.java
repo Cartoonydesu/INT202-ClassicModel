@@ -11,6 +11,21 @@ public class ProductRepository {
 
     private static int PAGE_SIZE = 10;
 
+    private EntityManager getEntityManager(){
+        return EntityManagerService.getEntityManager();
+    }
+
+    public Product findProduct(String productCode){
+        return find(productCode);
+    }
+
+    public Product find(String productCode){
+        EntityManager entityManager = getEntityManager();
+        Product product = entityManager.find(Product.class,productCode);
+        entityManager.close();
+        return product;
+    }
+
     public int getDefaultPageSize() {
         return PAGE_SIZE;
     }
