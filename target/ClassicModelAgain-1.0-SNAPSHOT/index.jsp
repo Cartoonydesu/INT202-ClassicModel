@@ -35,7 +35,11 @@
             const xhttp = new XMLHttpRequest();
             xhttp.onload = function () {
                 setLoading('off');
-                document.getElementById("body-content").innerHTML = xhttp.responseText;
+                if (xhttp.status == 200) {
+                    document.getElementById("body-content").innerHTML = xhttp.responseText;
+                } else {
+                    showLoginForm();
+                }
             }
             xhttp.open("GET", "office-list?officeCode=" + officeCode);
             xhttp.send();
@@ -63,6 +67,7 @@
                 loading.classList.add("d-none");
             }
         }
+
         function addToCart(productCode) {
             setLoading('on')
             const xhttp = new XMLHttpRequest();
@@ -81,23 +86,70 @@
             xhttp.open("GET", "add-to-cart?productCode=" + productCode);
             xhttp.send();
         }
-        function viewCart(){
+
+        function noOfProduct(){
+            
+        }
+
+        function viewCart() {
             setLoading('on');
             const xhttp = new XMLHttpRequest();
-            xhttp.onload = function (){
+            xhttp.onload = function () {
                 setLoading('off');
                 document.getElementById("view-cart").innerHTML = xhttp.responseText;
                 $('#viewCartModal').modal('show');
             }
-            xhttp.open("GET","ViewCart.jsp");
+            xhttp.open("GET", "ViewCart.jsp");
+            xhttp.send();
+        }
+
+        function showLoginForm() {
+            let menu = document.getElementById("login-menu").innerHTML;
+            if (menu.includes('Logout')) {
+                logout();
+            } else {
+                $('#modalLoginForm').modal('show');
+            }
+        }
+
+        function login(userName, password) {
+            setLoading('on')
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                setLoading('off');
+                if (xhttp.status == 200) {
+                    $('#modalLoginForm').modal('hide');
+                    document.getElementById("login-menu").innerHTML="<i class='bi bi-box-arrow-left'></i> Logout"
+                } else if (xhttp.status >= 500) {
+                    document.getElementById("login-message").innerHTML = xhttp.statusText;
+                } else {
+                    document.getElementById("login-message").innerHTML = "Wrong user name or password !!!";
+                }
+            }
+            // var params = "userName=" + userName + "&password=" + password;
+            // //alert("params: " + params);
+            // xhttp.open("GET", "login?" + params);
+            // xhttp.send();
+            let urlEncodedData = "", urlEncodedDataPairs = [];
+            urlEncodedDataPairs.push( encodeURIComponent("userName") + '=' + encodeURIComponent(userName));
+            urlEncodedDataPairs.push( encodeURIComponent("password") + '=' + encodeURIComponent(password));
+            urlEncodedData = urlEncodedDataPairs.join( '&' ).replace( /%20/g, '+' );
+            xhttp.open("POST", "login");
+            xhttp.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+            xhttp.send(urlEncodedData);
+        }
+        function logout(){
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function (){
+                location.reload();
+            }
+            xhttp.open("GET","logout");
             xhttp.send();
         }
     </script>
 </head>
 <body>
-<%--<h1><%= "Hello World!" %>--%>
-</h1>
-<br/>
+<jsp:include page="WEB-INF/jsp/login-form.html"/>
 <%--<a href="hello-servlet">Hello Servlet</a><br>--%>
 <%--<a href="product-list">Product List</a><br>--%>
 <%--<a href="office-list">Office Employee List</a>--%>
@@ -119,11 +171,12 @@
                     <a class="nav-link" href="javascript:void(0)">Order History</a>
                 </li>
                 <li class="nav-item ml-4">
-                    <a class="nav-link text-light" href="#"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+                    <a id="login-menu" class="nav-link text-light" href="javascript:showLoginForm()">
+                        <i class="bi bi-box-arrow-in-right"></i> Login</a>
                 </li>
             </ul>
             <div style="margin-right: 20px">
-<%--                <img src="assets/images/cart.png" width="42" onclick="viewCart()"/>--%>
+                <%--                <img src="assets/images/cart.png" width="42" onclick="viewCart()"/>--%>
                 <span class="text-warning"><i class="bi bi-cart" style="font-size:2em" onclick="viewCart()"></i></span>
                 <button id="noOfItemInCart" class="cart-info" onclick="viewCart()"></button>
             </div>

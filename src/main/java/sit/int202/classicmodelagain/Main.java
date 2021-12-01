@@ -1,15 +1,19 @@
 package sit.int202.classicmodelagain;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+import sit.int202.classicmodelagain.entities.Customer;
 import sit.int202.classicmodelagain.entities.Product;
 import sit.int202.classicmodelagain.models.Cart;
 import sit.int202.classicmodelagain.models.ClassicModelLineItem;
+import sit.int202.classicmodelagain.repositories.CustomerRepository;
 import sit.int202.classicmodelagain.repositories.ProductRepository;
 
 public class Main {
 
     public static void main(String[] args) {
 //        testProductLIst();
-        testShoppingCart();
+//        testShoppingCart();
+        testCustomer();
     }
 
     public static void testProductLIst(){
@@ -34,5 +38,25 @@ public class Main {
         System.out.println(cart.countPiece());
         System.out.println(cart.getTotalPrice());
         System.out.println(cart.getAllItem());
+    }
+
+    public static void testCustomer(){
+        CustomerRepository customerRepository = new CustomerRepository();
+        String password1 = "1234";
+        String password2 = "abcd";
+        Customer customer = customerRepository.findByName("Jean King");
+        System.out.println(customer);
+        BCrypt.Result result = BCrypt.verifyer().verify(password1.toCharArray(),customer.getPassword());
+        System.out.println("Password " + password1 + " " + (result.verified ? "matched" : "Unmatched"));
+
+        customer = customerRepository.findByName("Kwai Lee");
+        System.out.println(customer);
+        result = BCrypt.verifyer().verify(password1.toCharArray(),customer.getPassword());
+        System.out.println("Password " + password1 + " " + (result.verified ? "matched" : "Unmatched"));
+
+        customer = customerRepository.findByName("Desu Chan");
+        System.out.println(customer);
+        result = BCrypt.verifyer().verify(password1.toCharArray(),customer.getPassword());
+        System.out.println("Password " + password1 + " " + (result.verified ? "matched" : "Unmatched"));
     }
 }
