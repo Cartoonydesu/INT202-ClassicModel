@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="script.js"></script>
     <style>
         .div-link {
             cursor: pointer;
@@ -29,133 +30,12 @@
             display: none;
         }
     </style>
-    <script>
-        function loadOffice(officeCode) {
-            setLoading('on')
-            const xhttp = new XMLHttpRequest();
-            xhttp.onload = function () {
-                setLoading('off');
-                if (xhttp.status == 200) {
-                    document.getElementById("body-content").innerHTML = xhttp.responseText;
-                } else {
-                    showLoginForm();
-                }
-            }
-            xhttp.open("GET", "office-list?officeCode=" + officeCode);
-            xhttp.send();
-        }
-
-        function loadProduct(page, pageSize = document.getElementById("itemsPage").value) {
-            //alert('page: '+ page + ", size: "+ pageSize)
-            setLoading('on')
-            const xhttp = new XMLHttpRequest();
-            xhttp.onload = function () {
-                setLoading('off');
-                document.getElementById("body-content").innerHTML = xhttp.responseText;
-            }
-            xhttp.open("GET", "product-list?page=" + page + "&pageSize=" + pageSize);
-            xhttp.send();
-        }
-
-        function setLoading(on_off) {
-            let loading = document.getElementById("loading");
-            if (on_off == 'on') {
-                loading.classList.remove("d-none");
-                loading.classList.add("d-inline");
-            } else {
-                loading.classList.remove("d-inline");
-                loading.classList.add("d-none");
-            }
-        }
-
-        function addToCart(productCode) {
-            setLoading('on')
-            const xhttp = new XMLHttpRequest();
-            xhttp.onload = function () {
-                setLoading('off');
-                cartInfo = document.getElementById("noOfItemInCart");
-                noOfItem = xhttp.responseText;
-//                alert("Response = "+ noOfItem);
-                if (noOfItem > 0) {
-                    cartInfo.style.display = 'inline'
-                } else {
-                    cartInfo.style.display = 'none'
-                }
-                cartInfo.innerHTML = noOfItem;
-            }
-            xhttp.open("GET", "add-to-cart?productCode=" + productCode);
-            xhttp.send();
-        }
-
-        function noOfProduct(){
-            
-        }
-
-        function viewCart() {
-            setLoading('on');
-            const xhttp = new XMLHttpRequest();
-            xhttp.onload = function () {
-                setLoading('off');
-                document.getElementById("view-cart").innerHTML = xhttp.responseText;
-                $('#viewCartModal').modal('show');
-            }
-            xhttp.open("GET", "ViewCart.jsp");
-            xhttp.send();
-        }
-
-        function showLoginForm() {
-            let menu = document.getElementById("login-menu").innerHTML;
-            if (menu.includes('Logout')) {
-                logout();
-            } else {
-                $('#modalLoginForm').modal('show');
-            }
-        }
-
-        function login(userName, password) {
-            setLoading('on')
-            const xhttp = new XMLHttpRequest();
-            xhttp.onload = function () {
-                setLoading('off');
-                if (xhttp.status == 200) {
-                    $('#modalLoginForm').modal('hide');
-                    document.getElementById("login-menu").innerHTML="<i class='bi bi-box-arrow-left'></i> Logout"
-                } else if (xhttp.status >= 500) {
-                    document.getElementById("login-message").innerHTML = xhttp.statusText;
-                } else {
-                    document.getElementById("login-message").innerHTML = "Wrong user name or password !!!";
-                }
-            }
-            // var params = "userName=" + userName + "&password=" + password;
-            // //alert("params: " + params);
-            // xhttp.open("GET", "login?" + params);
-            // xhttp.send();
-            let urlEncodedData = "", urlEncodedDataPairs = [];
-            urlEncodedDataPairs.push( encodeURIComponent("userName") + '=' + encodeURIComponent(userName));
-            urlEncodedDataPairs.push( encodeURIComponent("password") + '=' + encodeURIComponent(password));
-            urlEncodedData = urlEncodedDataPairs.join( '&' ).replace( /%20/g, '+' );
-            xhttp.open("POST", "login");
-            xhttp.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
-            xhttp.send(urlEncodedData);
-        }
-        function logout(){
-            const xhttp = new XMLHttpRequest();
-            xhttp.onload = function (){
-                location.reload();
-            }
-            xhttp.open("GET","logout");
-            xhttp.send();
-        }
-    </script>
 </head>
 <body>
 <jsp:include page="WEB-INF/jsp/login-form.html"/>
-<%--<a href="hello-servlet">Hello Servlet</a><br>--%>
-<%--<a href="product-list">Product List</a><br>--%>
-<%--<a href="office-list">Office Employee List</a>--%>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand text-warning" href="javascript:void(0)">Classic Model</a>
+        <a class="navbar-brand text-warning" href="javascript:aboutPage()">Classic Model</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
             <span class="navbar-toggler-icon"></span>
         </button>

@@ -21,5 +21,13 @@ public class CustomerRepository {
         return customers.size()==0? null : customers.get(0);
     }
 
+    public List<Customer> findAll(){
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Customer.FindAll");
+        List<Customer> customers = query.getResultList();
+        em.close();
+        return customers;
+    }
+
 
 }

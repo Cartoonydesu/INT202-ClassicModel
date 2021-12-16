@@ -7,7 +7,8 @@ import java.math.BigDecimal;
         @Index(name = "salesRepEmployeeNumber", columnList = "salesRepEmployeeNumber")
 })
 @NamedQueries({
-        @NamedQuery(name = "FIND_USER", query = "SELECT c FROM Customer c WHERE concat(trim(c.contactFirstName), ' ', trim(c.contactLastName)) = :user_account")
+        @NamedQuery(name = "FIND_USER", query = "SELECT c FROM Customer c WHERE concat(trim(c.contactFirstName), ' ', trim(c.contactLastName)) = :user_account"),
+        @NamedQuery(name = "Customer.FindAll", query="SELECT c FROM Customer c")
 })
 @Entity
 public class Customer {
@@ -54,6 +55,17 @@ public class Customer {
 
     @Column(name = "password", length = 64)
     private String password;
+
+    @Column(name = "role")
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getPassword() {
         return password;
@@ -175,6 +187,7 @@ public class Customer {
                 ", contactFirstName='" + contactFirstName + '\'' +
                 ", country='" + country + '\'' +
                 ", password='" + password + '\'' +
+                ", role= '" + role + "'" +
                 '}';
     }
 }

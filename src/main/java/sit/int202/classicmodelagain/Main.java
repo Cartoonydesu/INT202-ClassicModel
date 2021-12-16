@@ -13,7 +13,8 @@ public class Main {
     public static void main(String[] args) {
 //        testProductLIst();
 //        testShoppingCart();
-        testCustomer();
+//        testCustomer();
+        testCusList();
     }
 
     public static void testProductLIst(){
@@ -58,5 +59,10 @@ public class Main {
         System.out.println(customer);
         result = BCrypt.verifyer().verify(password1.toCharArray(),customer.getPassword());
         System.out.println("Password " + password1 + " " + (result.verified ? "matched" : "Unmatched"));
+    }
+
+    public static void testCusList(){
+        CustomerRepository customerRepository = new CustomerRepository();
+        System.out.println(customerRepository.findAll());
     }
 }

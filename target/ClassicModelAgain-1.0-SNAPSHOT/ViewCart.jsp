@@ -1,3 +1,16 @@
+<%--String productCode = request.getParameter("productCode");--%>
+<%--String newQuantity = request.getParameter("quantity");--%>
+<%--HttpSession session = request.getSession();--%>
+<%--Cart<String, ClassicModelLineItem> cart = (Cart) session.getAttribute("cart");--%>
+
+<%--ProductRepository productRepository = new ProductRepository();--%>
+<%--Product product = productRepository.find(productCode);--%>
+<%--if(Integer.valueOf(newQuantity) == 0){--%>
+<%--cart.removeItem(productCode);--%>
+<%--}else if(product != null || Integer.valueOf(newQuantity) > 0){--%>
+<%--cart.updateItem(productCode, Integer.valueOf(newQuantity));--%>
+<%--}--%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:choose>
@@ -10,26 +23,33 @@
             <th>#</th>
             <th>Code</th>
             <th>Description</th>
-            <th>Quantity</th>
             <th>Price</th>
+            <th>Quantity</th>
             <th>Total</th>
             </thead>
             <tbody>
             <c:forEach items="${cart.allItem}" var="lineItem" varStatus="vs">
-                <tr>
+                <tr id="row-${vs.count}" style="">
                     <td>${vs.count}</td>
                     <td>${lineItem.product.id}</td>
                     <td>${lineItem.product.productName}</td>
-                    <td>${lineItem.quantity}</td>
                     <td>${lineItem.product.msrp}</td>
-                    <td>${lineItem.total}</td>
+                    <td><input id="${lineItem.product.id}" type="number" name="quantity" min="1" size="3"
+                               value="${lineItem.quantity}"
+                               onclick="updateCart(${lineItem.product.id},${vs.count},${lineItem.product.msrp})"></td>
+                    <td id="show-total-${vs.count}"><fmt:formatNumber pattern="#,###.00"
+                                                                      value="${lineItem.total}"/></td>
+                    <td>
+                        <button class="btn btn-primary" type="button"
+                                onclick="removeItem(${lineItem.product.id},'row-${vs.count}')">
+                            remove
+                        </button>
+                    </td>
                 </tr>
             </c:forEach>
-            <tr>
-                <td colspan="5" style="text-align: right;margin-right: 5px">Total</td>
-                <td><fmt:formatNumber pattern="#,###.00" value="${cart.totalPrice}"/></td>
-            </tr>
             </tbody>
         </table>
     </c:otherwise>
 </c:choose>
+<%--<button id="update-cart" class="btn btn-primary" type="button" onclick="viewCart()">Save cart</button>--%>
+<%--<button id="edit-cart" class="btn btn-primary" type="button" onclick="editCart()">Edit</button>--%>
